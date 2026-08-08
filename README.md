@@ -51,15 +51,6 @@ The portal supports:
 
 The selected semester automatically loads the corresponding worksheet.
 
-For example:
-
-```text
-Semester 4
-   ├── Series 1 → SEM4 Series 1
-   ├── Series 2 → SEM4 Series 2
-   └── University → SEM4 University
-```
-
 ---
 
 ## 📝 Series Examination Details
@@ -144,50 +135,6 @@ The interface uses a clean academic dashboard design featuring:
 
 ---
 
-
-
-## 🔐 Privacy-Oriented Design
-
-The portal is designed so that the academic dashboard is shown only after successful verification.
-
-The verification requires the student's:
-
-```text
-Student Name
-        +
-University Registration Number
-        +
-Admission Number
-```
-
-All three must correspond to the same student record.
-
-> **Important:** This is a client-side web application. It should not be considered a high-security authentication system for highly sensitive information. For stronger privacy, a server-side authentication/database solution should be used.
-
----
-
-## 🛠️ Technology Stack
-
-Built using lightweight web technologies:
-
-* 🌐 HTML5
-* 🎨 CSS3
-* ⚡ Vanilla JavaScript
-* 📊 Google Sheets
-* 🔄 Google Visualization API
-* 📄 Google Sheets CSV fallback
-* 📱 Responsive Web Design
-
-No framework is required.
-
----
-
-
-
-
-
-
-
 ## 💡 Why This Project?
 
 Managing academic information through spreadsheets is convenient for faculty but not always convenient for students.
@@ -201,27 +148,6 @@ This project provides a simple interface between the **faculty-maintained Google
 Students can simply:
 
 > **Verify → Select Semester → View Record**
-
----
-
-## 🔮 Future Enhancements
-
-Possible future improvements include:
-
-* 🔐 Server-side authentication
-* 📊 Performance analytics
-* 📈 Semester performance graphs
-* 📉 Subject-wise progress tracking
-* 🏆 Academic performance indicators
-* 📄 PDF report generation
-* 📥 Downloadable mark sheets
-* 📱 Progressive Web App (PWA)
-* 🔔 Academic notifications
-* 👨‍🏫 Faculty dashboard
-* 📊 Class-level analytics
-* 🌓 Dark mode
-* 🔎 Student search/autocomplete
-* 📤 Automated result publication
 
 ---
 
