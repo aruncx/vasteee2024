@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>2024 B.Tech EEE – Student Academic Record</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e4e9f0;--blue:#2563eb;--violet:#6657e8;--green:#079669;--red:#dc3545}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef4ff 0,#f7f9fc 38%,#fff 100%);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+.wrap{width:min(100%,780px);margin:auto;padding:16px 12px 40px}.institution{
+  background:linear-gradient(135deg,#111827,#263b78);
+  color:#fff;
+  border-radius:20px;
+  padding:20px 18px;
+  margin-bottom:18px;
+  box-shadow:0 12px 30px rgba(23,32,51,.16);
+}
+.institution-name{
+  font-size:clamp(17px,4vw,24px);
+  font-weight:950;
+  letter-spacing:.2px;
+  line-height:1.2;
+}
+.department-name{
+  margin-top:6px;
+  font-size:clamp(12px,3vw,15px);
+  font-weight:750;
+  line-height:1.35;
+  opacity:.92;
+}
+
+.institution-sub{
+  margin-top:8px;
+  font-size:13px;
+  font-weight:800;
+  opacity:.9;
+}
+.institution-location{
+  margin-top:3px;
+  font-size:12px;
+  opacity:.78;
+}
+.program-badge{
+  display:inline-block;
+  margin-top:13px;
+  padding:7px 11px;
+  border-radius:10px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.2);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.4px;
+}
+
+.hero{padding:8px 4px 16px}.pill{display:inline-block;padding:7px 11px;border-radius:99px;background:#e8efff;color:#2450b8;font-size:11px;font-weight:900}.hero h1{margin:11px 0 6px;font-size:28px}.hero p{margin:0;color:var(--muted);font-size:13px;line-height:1.55}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px;box-shadow:0 14px 40px #17203312;margin-top:12px}
+.field{margin-bottom:14px}label{display:block;font-size:11px;font-weight:900;color:#475467;margin-bottom:7px;letter-spacing:.25px}
+select,input{width:100%;height:51px;border:1px solid #d5dce7;border-radius:14px;background:#fff;padding:0 14px;color:var(--ink);font-size:15px;outline:0}
+select:focus,input:focus{border-color:#6d8ff4;box-shadow:0 0 0 4px #2563eb16}.primary{width:100%;height:52px;border:0;border-radius:15px;background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;font-weight:900;cursor:pointer}.primary:disabled{opacity:.5;cursor:not-allowed}
+.msg{display:none;margin-top:12px;padding:11px 13px;border-radius:13px;font-size:12px;line-height:1.45}.msg.show{display:block}.msg.error{background:#fff0f1;color:#a61b29}.msg.ok{background:#ecfdf3;color:#047857}.msg.info{background:#eef5ff;color:#1d4ed8}.hidden{display:none!important}
+.profile{display:flex;align-items:center;gap:12px}.avatar{width:53px;height:53px;border-radius:17px;background:linear-gradient(135deg,#2563eb,#7048e8);color:#fff;display:grid;place-items:center;font-weight:900;font-size:21px}.profile h2{margin:0 0 3px;font-size:18px}.profile p{margin:0;color:var(--muted);font-size:11px}
+.identity{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:15px 0}.identity div{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:11px}.identity small,.stat small{display:block;color:var(--muted);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.25px}.identity b{display:block;font-size:12px;margin-top:3px;word-break:break-word}
+.title{font-size:17px;font-weight:900;margin:5px 0}.sub{font-size:11px;color:var(--muted);margin:0 0 10px}.segments{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.segments button{height:44px;border:1px solid #d8dfeb;border-radius:13px;background:#fff;color:#475467;font-weight:900;cursor:pointer}.segments button.active{background:#172033;color:#fff;border-color:#172033}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0}.stat{min-height:79px;padding:12px 7px;border-radius:15px;background:#f8fafc;border:1px solid var(--line);text-align:center}.stat b{display:block;margin-top:4px;font-size:19px}.pass{color:var(--green)!important}.fail{color:var(--red)!important}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px}.table{width:100%;border-collapse:collapse;min-width:470px}.table th{background:#f8fafc;color:#667085;text-align:left;font-size:10px;text-transform:uppercase;padding:11px}.table td{padding:11px;font-size:12px;border-top:1px solid #edf0f4}.table td:last-child,.table th:last-child{text-align:right}.empty{text-align:center;padding:26px 12px;color:var(--muted);font-size:12px;line-height:1.6}.back{width:100%;height:45px;border:1px solid var(--line);border-radius:13px;background:#f8fafc;color:#344054;font-weight:800;margin-top:14px}.footer{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin-top:22px;
+  padding:0 0 8px;
+}
+.footer-link{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:9px 15px;
+  border:1px solid #e7ddff;
+  border-radius:999px;
+  background:#fbf8ff;
+  color:#242938;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:700;
+  box-shadow:0 4px 14px rgba(80,55,140,.06);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.footer-link:hover{
+  transform:translateY(-1px);
+  border-color:#d8c8ff;
+  box-shadow:0 7px 18px rgba(80,55,140,.10);
+}
+.footer-heart{color:#ef4b61;font-size:15px;line-height:1}
+.github-icon{width:17px;height:17px;fill:#6040a5;flex:none}
+@media(max-width:440px){.wrap{padding-left:10px;padding-right:10px}.card{padding:15px}.hero h1{font-size:25px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="institution">
+    <div class="institution-name">VIDYA ACADEMY OF SCIENCE &amp; TECHNOLOGY</div>
+    <div class="department-name">Department of Electrical and Electronics Engineering</div>
+    <div class="institution-sub">B.Tech 2024–28</div>
+    <div class="institution-location">VAS – Thalakkottukara, Thrissur</div>
+    <div class="program-badge">2024 B.TECH EEE</div>
+  </div>
+
+  <span class="pill">🎓 Academic Record Portal</span>
+
+  <h1>Student Academic Record</h1>
+
+  <p>
+    Select your details and verify them to view your own
+    semester-wise academic record.
+  </p>
+</header>
+
+<section class="card" id="loginCard">
+ <div class="field"><label>STUDENT NAME</label><select id="nameSelect"><option>Loading student list…</option></select></div>
+ <div class="field"><label>UNIVERSITY REGISTRATION NUMBER</label><select id="regSelect" disabled><option>Select your name first</option></select></div>
+ <div class="field"><label>ADMISSION NUMBER</label><input id="admission" type="password" autocomplete="off" placeholder="Enter your admission number"></div>
+ <button class="primary" id="verifyBtn" disabled>Verify & View My Academic Record</button>
+ <div class="msg" id="loginMsg"></div>
+</section>
+
+<section class="card hidden" id="recordCard">
+ <div class="profile"><div class="avatar" id="avatar">S</div><div><h2 id="studentName">Student</h2><p id="studentReg">—</p></div></div>
+ <div class="identity">
+  <div><small>Admission Number</small><b id="studentAdm">—</b></div>
+  <div><small>Registration Number</small><b id="studentReg2">—</b></div>
+ </div>
+ <div class="title">Semester</div>
+ <p class="sub">Choose a semester to view only your academic data for that semester.</p>
+ <select id="semesterSelect"></select>
+ <div class="segments">
+  <button data-type="series1" class="active">Series 1</button>
+  <button data-type="series2">Series 2</button>
+  <button data-type="university">University</button>
+ </div>
+ <div id="recordContent"></div>
+ <button class="back" onclick="logout()">← Back to Student Login</button>
+</section>
+<div class="footer">
+  <a class="footer-link"
+     href="https://github.com/aruncx"
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="Made with love by AX - GitHub">
+    <span>Made with</span>
+    <span class="footer-heart">♥</span>
+    <span>by AX</span>
+    <svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 .5C5.65.5.5 5.66.5 12.02c0 5.1 3.31 9.43 7.9 10.96.58.1.79-.25.79-.56v-2.1c-3.22.7-3.9-1.38-3.9-1.38-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.04 1.77 2.72 1.26 3.39.96.1-.75.41-1.26.74-1.55-2.57-.29-5.28-1.29-5.28-5.72 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.03 11.03 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.77.11 3.06.74.81 1.19 1.84 1.19 3.1 0 4.44-2.71 5.42-5.29 5.71.42.36.79 1.07.79 2.16v3.18c0 .31.21.67.8.56a11.52 11.52 0 0 0 7.89-10.96C23.5 5.66 18.35.5 12 .5Z"/>
+    </svg>
+  </a>
+</div>
+</div>
+
+<script>
+const CONFIG={
+ SHEET_ID:"1EuAESexvsB8hYFsiR8-bnxxv-aYv7pHPZnYlByV1Ryk",
+ DATA_SHEET:"DATA"
+};
+
+let dataHeaders=[],dataRows=[],selectedStudent=null,currentSemester=1,currentType="series1";
+
+const $=id=>document.getElementById(id);
+const nameSelect=$("nameSelect"),regSelect=$("regSelect"),admission=$("admission"),verifyBtn=$("verifyBtn");
+
+function clean(v){return String(v??"").trim()}
+function norm(v){
+ return clean(v)
+   .replace(/\u00a0/g," ")
+   .toLowerCase()
+   .replace(/[._\-]+/g," ")
+   .replace(/\s+/g," ")
+   .trim();
+}
+function compact(v){return norm(v).replace(/[^a-z0-9]/g,"")}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function setMsg(t,type="info"){const e=$("loginMsg");e.textContent=t;e.className="msg show "+type}
+function clearMsg(){$("loginMsg").className="msg"}
+
+function findIndex(headers,...names){
+ const exact=names.map(norm), comp=names.map(compact);
+ let i=headers.findIndex(h=>exact.includes(norm(h))); if(i>=0)return i;
+ return headers.findIndex(h=>{const c=compact(h);return comp.some(x=>c===x||c.includes(x)||x.includes(c))});
+}
+function getFrom(o,...names){
+ const k=Object.keys(o).find(x=>names.map(norm).includes(norm(x)));
+ if(k)return clean(o[k]);
+ const k2=Object.keys(o).find(x=>names.map(compact).some(n=>compact(x)===n));
+ return k2?clean(o[k2]):"";
+}
+
+async function gviz(sheetName){
+ const encoded=encodeURIComponent(sheetName);
+
+ // Method 1: Google Visualization JSON
+ try{
+   const url=`https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encoded}`;
+   const r=await fetch(url,{cache:"no-store"});
+   const text=await r.text();
+   const a=text.indexOf("{"),b=text.lastIndexOf("}");
+   if(r.ok && a>=0 && b>a){
+     const d=JSON.parse(text.slice(a,b+1));
+     if(d.status!=="error"){
+       const cols=d.table?.cols||[];
+
+       // Google Visualization returns the first sheet row as column
+       // labels, not as part of table.rows.  Put those labels back as
+       // the first row so DATA row 1 remains the header and ABHIJITH
+       // (the first student row) is not accidentally discarded.
+       const header=cols.map((c,i)=>clean(c.label)||`Column ${i+1}`);
+       const rows=(d.table?.rows||[])
+         .map(row=>cols.map((_,i)=>row.c?.[i]?.v??""));
+
+       const raw=[header,...rows];
+
+       if(rows.length || cols.length) return {cols,raw};
+     }
+   }
+ }catch(e){
+   console.warn("GViz read failed for",sheetName,e);
+ }
+
+ // Method 2: CSV export. This is useful when the GViz endpoint is
+ // temporarily unavailable but the spreadsheet is publicly viewable.
+ const csvUrl=`https://docs.google.com/spreadsheets/d/${CONFIG.SHEET_ID}/export?format=csv&sheet=${encoded}`;
+ const r=await fetch(csvUrl,{cache:"no-store"});
+ if(!r.ok)throw Error(`Google Sheet request failed (${r.status})`);
+ const text=await r.text();
+ const raw=parseCSV(text);
+ if(!raw.length)throw Error("The worksheet returned no data");
+ return {cols:[],raw};
+}
+
+function parseCSV(text){
+ const rows=[];let row=[],cell="",quoted=false;
+ for(let i=0;i<text.length;i++){
+   const ch=text[i],next=text[i+1];
+   if(ch==='"'){
+     if(quoted&&next==='"'){cell+='"';i++}
+     else quoted=!quoted;
+   }else if(ch===','&&!quoted){
+     row.push(cell);cell="";
+   }else if((ch==='\n'||ch==='\r')&&!quoted){
+     if(ch==='\r'&&next==='\n')i++;
+     row.push(cell);cell="";
+     if(row.some(v=>String(v).trim()!==""))rows.push(row);
+     row=[];
+   }else cell+=ch;
+ }
+ if(cell!==""||row.length){row.push(cell);if(row.some(v=>String(v).trim()!==""))rows.push(row)}
+ return rows;
+}
+
+/*
+  Find the REAL header row.
+  Series sheets have title rows above row 3:
+  Series Test I Analysis
+  Semester I
+  then the header.
+*/
+function normalizeSheet(raw){
+ if(!raw||!raw.length)return {headers:[],rows:[]};
+
+ // Look for a row containing Student Name. This is the actual header in
+ // DATA and in all academic tabs shown by the user.
+ let headerAt=-1;
+ for(let i=0;i<Math.min(raw.length,20);i++){
+   const r=raw[i].map(clean);
+   const hasName=r.some(v=>/^(student\s*name|name)$/i.test(v));
+   if(hasName){headerAt=i;break}
+ }
+
+ // If no Student Name header was found, use the first non-empty row.
+ if(headerAt<0){
+   headerAt=0;
+   while(headerAt<raw.length && !raw[headerAt].some(v=>clean(v)))headerAt++;
+ }
+
+ const headers=(raw[headerAt]||[]).map((v,i)=>clean(v)||`__BLANK_${i}__`);
+ const rows=raw.slice(headerAt+1).filter(r=>r.some(v=>clean(v)));
+
+ return {headers,rows};
+}
+
+async function loadData(){
+ try{
+   const result=await gviz(CONFIG.DATA_SHEET);
+   const raw=result.raw||[];
+
+   if(!raw.length)throw Error("DATA sheet returned no rows.");
+
+   // DATA sheet confirmed layout:
+   // A = UNIVERSITY REGISTRATION NUMBER
+   // B = Roll.No
+   // C = Admission Number
+   // D = Student Name
+   //
+   // Do NOT run the generic academic-header detector on DATA.
+   // The first row is the DATA header.
+   dataHeaders=(raw[0]||[]).map((v,i)=>clean(v)||`Column ${i+1}`);
+   dataRows=raw.slice(1).filter(r=>r.some(v=>clean(v)));
+
+   const names=[...new Set(dataRows
+     .map(r=>clean(r[3]))
+     .filter(Boolean))]
+     .sort((a,b)=>a.localeCompare(b));
+
+   if(!names.length){
+     throw Error(`No names found in DATA column D. Rows received: ${dataRows.length}`);
+   }
+
+   nameSelect.innerHTML='<option value="">Select your name</option>';
+   names.forEach(n=>{
+     const o=document.createElement("option");
+     o.value=n;
+     o.textContent=n;
+     nameSelect.appendChild(o);
+   });
+
+   clearMsg();
+ }catch(e){
+   console.error("DATA load error:",e);
+   nameSelect.innerHTML="<option>Unable to load student list</option>";
+   setMsg(`DATA loading error: ${e.message||"Unknown error"}`,"error");
+ }
+}
+
+nameSelect.onchange=()=>{
+ const selectedName=clean(nameSelect.value);
+ regSelect.innerHTML='<option value="">Select your registration number</option>';
+ regSelect.disabled=!selectedName;
+ admission.value="";
+ verifyBtn.disabled=true;
+
+ if(!selectedName)return;
+
+ // DATA: A = registration, C = admission, D = name
+ const regs=[...new Set(dataRows
+   .filter(r=>norm(r[3])===norm(selectedName))
+   .map(r=>clean(r[0]))
+   .filter(Boolean))];
+
+ regs.forEach(v=>{
+   const o=document.createElement("option");
+   o.value=v;
+   o.textContent=v;
+   regSelect.appendChild(o);
+ });
+
+ if(!regs.length){
+   setMsg(`No registration number found for ${selectedName}.`,"error");
+ }else{
+   clearMsg();
+ }
+};
+
+function validate(){verifyBtn.disabled=!(nameSelect.value&&regSelect.value&&admission.value.trim())}
+regSelect.onchange=validate;admission.oninput=validate;
+
+verifyBtn.onclick=()=>{
+ const student=nameSelect.value, reg=regSelect.value, adm=admission.value.trim();
+
+ // DATA: A = University Registration Number
+ //       B = Roll.No
+ //       C = Admission Number
+ //       D = Student Name
+ const row=dataRows.find(r=>
+   norm(r[3])===norm(student) &&
+   norm(r[0])===norm(reg) &&
+   norm(r[2])===norm(adm)
+ );
+
+ if(!row){
+   setMsg("The Student Name, University Registration Number and Admission Number do not match the same DATA row.","error");
+   return;
+ }
+
+ selectedStudent={
+   "University Registration Number":clean(row[0]),
+   "Roll.No":clean(row[1]),
+   "Admission Number":clean(row[2]),
+   "Student Name":clean(row[3])
+ };
+
+ showDashboard();
+};
+
+function showDashboard(){
+ $("loginCard").classList.add("hidden");$("recordCard").classList.remove("hidden");
+ const name=getFrom(selectedStudent,"Student Name","Name","Student"),reg=getFrom(selectedStudent,"University Registration Number","University Registration No","University Reg No","Registration Number","Reg No"),adm=getFrom(selectedStudent,"Admission Number","Admission No","Admission");
+ $("studentName").textContent=name||"Student";$("studentReg").textContent=reg||"—";$("studentReg2").textContent=reg||"—";$("studentAdm").textContent=adm||"—";$("avatar").textContent=(name||"S")[0].toUpperCase();
+ const s=$("semesterSelect");s.innerHTML="";for(let i=1;i<=8;i++){const o=document.createElement("option");o.value=i;o.textContent=`Semester ${i}`;s.appendChild(o)}
+ currentSemester=1;currentType="series1";setActive("series1");renderAcademic();
+}
+$("semesterSelect").onchange=e=>{currentSemester=Number(e.target.value);renderAcademic()};
+document.querySelectorAll(".segments button").forEach(b=>b.onclick=()=>{currentType=b.dataset.type;setActive(currentType);renderAcademic()});
+function setActive(t){document.querySelectorAll(".segments button").forEach(b=>b.classList.toggle("active",b.dataset.type===t))}
+
+function sheetNameFor(semester,type){
+ const label=type==="series1"?"Series 1":type==="series2"?"Series 2":"University";
+ return `SEM${semester} ${label}`;
+}
+
+async function renderAcademic(){
+ const content=$("recordContent"),sheetName=sheetNameFor(currentSemester,currentType);
+ content.innerHTML=`<div class="empty">Loading <b>${esc(sheetName)}</b>…</div>`;
+ try{
+  const sheet=normalizeSheet((await gviz(sheetName)).raw);
+  const record=extractStudentAcademic(sheet,currentType);
+  if(!record){
+   content.innerHTML=`<div class="empty">No record found for this student in <b>${esc(sheetName)}</b>.</div>`;return;
+  }
+  if(currentType==="university")renderUniversity(record);
+  else renderSeries(record);
+ }catch(e){
+  console.error(e);
+  content.innerHTML=`<div class="empty">Could not load <b>${esc(sheetName)}</b>.<br>Please check that the worksheet exists and is accessible.</div>`;
+ }
+}
+
+/*
+  CRITICAL PART:
+  Subject columns are NOT hard-coded as C-G.
+  Every semester can have different subject names/count.
+  We find Student Name, then find "Abst in Exams", and use every
+  real column between them as a subject. Blank spacer columns are ignored.
+*/
+function extractStudentAcademic(sheet,type){
+ const hs=sheet.headers,rs=sheet.rows;
+ const ni=findIndex(hs,"Student Name","Name","Student");
+ const ri=findIndex(hs,"University Registration Number","University Registration No","University Reg No","University Reg. No.","Registration Number","Registration No","Reg Number","Reg No");
+ const studentName=getFrom(selectedStudent,"Student Name","Name","Student");
+ const studentReg=getFrom(selectedStudent,"University Registration Number","University Registration No","University Reg No","Registration Number","Reg No");
+ const studentRoll=getFrom(selectedStudent,"Roll.No","Roll No","Roll Number","Class Roll No","Class Roll Number");
+
+ let row;
+ if(type==="university"){
+  // University sheets contain the registration number, so use it as the
+  // primary key. Name is only a fallback.
+  row=rs.find(r=>ri>=0 && norm(r[ri])===norm(studentReg));
+  if(!row && ni>=0) row=rs.find(r=>norm(r[ni])===norm(studentName));
+ }else{
+  // Series sheets contain Class Roll No. + Student Name, but not the
+  // university registration number. Roll number is more reliable than
+  // name when a name has different spacing/punctuation in a semester sheet.
+  const rollI=findIndex(hs,"Class Roll No.","Class Roll No","Roll No","Roll Number","Class Roll Number");
+  if(rollI>=0 && studentRoll!==""){
+    row=rs.find(r=>norm(r[rollI])===norm(studentRoll));
+  }
+  if(!row && ni>=0){
+    row=rs.find(r=>norm(r[ni])===norm(studentName));
+  }
+ }
+ if(!row)return null;
+
+ if(type==="university")return parseUniversity(hs,row,ni,ri);
+ return parseSeries(hs,row,ni);
+}
+
+function parseSeries(hs,row,ni){
+ const absenceI=findIndex(hs,"Abst in Exams","Abst in Exam","Abs in Exams","Absent in Exams");
+ const totalI=findIndex(hs,"Total Marks","Total Mark");
+ const percentI=findIndex(hs,"% Marks","% Mark","Percentage","Percent Marks");
+ const failureI=findIndex(hs,"No. of Failures","No of Failures","Failures","Failure");
+
+ // Subjects are all populated columns between Student Name and the first
+ // summary column. This works for SEM1, SEM2 ... SEM8 even if subject names
+ // or the number of subjects change.
+ const summaryIndexes=[absenceI,totalI,percentI,failureI].filter(i=>i>=0);
+ const end=summaryIndexes.length?Math.min(...summaryIndexes):hs.length;
+ const subjects=[];
+ for(let i=ni+1;i<end;i++){
+  const h=clean(hs[i]),v=clean(row[i]);
+  if(!h||h.startsWith("__BLANK_")||v==="")continue;
+  if(/roll|student|name|registration|total|marks|percent|failure|absent/i.test(h))continue;
+  subjects.push({subject:h,marks:v,status:seriesStatus(v)});
+ }
+ return {
+  kind:"series",
+  subjects,
+  absent:absenceI>=0?clean(row[absenceI]):"0",
+  total:totalI>=0?clean(row[totalI]):"",
+  percentage:percentI>=0?clean(row[percentI]):"",
+  failures:failureI>=0?clean(row[failureI]):""
+ };
+}
+
+function seriesStatus(v){
+ const x=norm(v);
+ if(x==="absent"||x==="a"||x.includes("absent"))return "ABSENT";
+ const n=Number(v);if(!Number.isFinite(n))return "";
+ return n>=15?"PASS":"FAIL";
+}
+
+function parseUniversity(hs,row,ni,ri){
+ const earnedI=findIndex(hs,"Earned Cr.","Earned Cr","Earned Credits");
+ const cumulI=findIndex(hs,"Cumul Cr.","Cumul Cr","Cumulative Credits","Cumul Credits");
+ const sgpaI=findIndex(hs,"SGPA"),cgpaI=findIndex(hs,"CGPA"),arrearsI=findIndex(hs,"Arrears"),statusI=findIndex(hs,"Status");
+ const end=earnedI>=0?earnedI:hs.length,subjects=[];
+ const start=Math.max(ni,ri)+1;
+ for(let i=start;i<end;i++){
+  const h=clean(hs[i]),v=clean(row[i]);
+  if(!h||h.startsWith("__BLANK_")||v==="")continue;
+  if(/student|name|registration|roll|number/i.test(h))continue;
+  subjects.push({code:h,grade:v,status:/^f$/i.test(v)||/^fail/i.test(v)?"FAIL":"PASS"});
+ }
+ return {kind:"university",subjects,earned:earnedI>=0?clean(row[earnedI]):"",cumulative:cumulI>=0?clean(row[cumulI]):"",sgpa:sgpaI>=0?clean(row[sgpaI]):"",cgpa:cgpaI>=0?clean(row[cgpaI]):"",arrears:arrearsI>=0?clean(row[arrearsI]):"",overall:statusI>=0?clean(row[statusI]):""};
+}
+
+function displayMark(v){const n=Number(v);return v!==""&&Number.isFinite(n)?(Number.isInteger(n)?String(n):String(Math.round(n*100)/100)):v}
+function displayPercent(v){const n=Number(v);return v!==""&&Number.isFinite(n)?n.toFixed(2):v}
+
+function renderSeries(r){
+ const pass=r.subjects.filter(x=>x.status==="PASS").length,fail=r.subjects.filter(x=>x.status==="FAIL").length;
+ const absentSubjects=r.subjects.filter(x=>x.status==="ABSENT").length;
+ const absent=r.absent!==""?r.absent:String(absentSubjects);
+ $("recordContent").innerHTML=`
+ <div class="summary">
+  <div class="stat"><small>Total Marks</small><b>${esc(displayMark(r.total)||"—")}</b></div>
+  <div class="stat"><small>% Marks</small><b>${esc(displayPercent(r.percentage)||"—")}</b></div>
+  <div class="stat"><small>Failures</small><b class="${Number(r.failures)>0?"fail":"pass"}">${esc(r.failures||String(fail))}</b></div>
+ </div>
+ <div class="summary">
+  <div class="stat"><small>Subjects</small><b>${r.subjects.length}</b></div>
+  <div class="stat"><small>Pass</small><b class="pass">${pass}</b></div>
+  <div class="stat"><small>Absent in Exams</small><b class="${Number(absent)>0?"fail":""}">${esc(absent)}</b></div>
+ </div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Subject</th><th>Marks</th><th>Status</th></tr></thead><tbody>
+ ${r.subjects.map(x=>`<tr><td>${esc(x.subject)}</td><td>${esc(displayMark(x.marks))}</td><td class="${x.status==="FAIL"||x.status==="ABSENT"?"fail":"pass"}">${esc(x.status)}</td></tr>`).join("")}
+ </tbody></table></div>`;
+}
+
+function renderUniversity(r){
+ $("recordContent").innerHTML=`
+ <div class="summary"><div class="stat"><small>SGPA</small><b>${esc(r.sgpa||"—")}</b></div><div class="stat"><small>CGPA</small><b>${esc(r.cgpa||"—")}</b></div><div class="stat"><small>Arrears</small><b class="${Number(r.arrears)>0?"fail":"pass"}">${esc(r.arrears||"0")}</b></div></div>
+ <div class="summary"><div class="stat"><small>Earned Credits</small><b>${esc(r.earned||"—")}</b></div><div class="stat"><small>Cumulative Credits</small><b>${esc(r.cumulative||"—")}</b></div><div class="stat"><small>Status</small><b class="${norm(r.overall)==="clear"?"pass":"fail"}">${esc(r.overall||"—")}</b></div></div>
+ <div class="table-wrap"><table class="table"><thead><tr><th>Subject Code</th><th>Grade</th><th>Status</th></tr></thead><tbody>
+ ${r.subjects.map(x=>`<tr><td>${esc(x.code)}</td><td>${esc(x.grade)}</td><td class="${x.status==="FAIL"?"fail":"pass"}">${esc(x.status)}</td></tr>`).join("")}
+ </tbody></table></div>`;
+}
+
+function logout(){selectedStudent=null;$("recordCard").classList.add("hidden");$("loginCard").classList.remove("hidden");admission.value="";regSelect.value="";clearMsg();window.scrollTo({top:0,behavior:"smooth"})}
+loadData();
+</script>
+</body>
+</html>
