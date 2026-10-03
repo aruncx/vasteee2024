@@ -683,33 +683,99 @@ function findLabel(values,label){
 }
 
 function parseSeries(hs,row,ni){
- const absenceI=findIndex(hs,"Abst in Exams","Abst in Exam","Abs in Exams","Absent in Exams");
- const totalI=findIndex(hs,"Total Marks","Total Mark");
- const percentI=findIndex(hs,"% Marks","% Mark","Percentage","Percent Marks");
- const failureI=findIndex(hs,"No. of Failures","No of Failures","Failures","Failure");
+ const absenceI=findIndex(hs,
+   "Abst in Exams","Abst in Exam","Abs in Exams","Absent in Exams","ABT");
 
- // Subjects are all populated columns between Student Name and the first
- // summary column. This works for SEM1, SEM2 ... SEM8 even if subject names
- // or the number of subjects change.
- const summaryIndexes=[absenceI,totalI,percentI,failureI].filter(i=>i>=0);
- const end=summaryIndexes.length?Math.min(...summaryIndexes):hs.length;
+ const totalI=findIndex(hs,
+   "Total Marks","Total Mark","Total");
+
+ const percentI=findIndex(hs,
+   "% Marks","% Mark","Percentage","Percent Marks");
+
+ /*
+   IMPORTANT:
+   In the Series sheets the final summary column is titled
+   "No. of Fail + Abt". This is NOT a subject.
+
+   Example Semester 3:
+     MATHS | CIRCUITS | MACHINES | ANALOG | ECONOMICS | AI
+     28    | 29       | 7        | 27.5   | 21        | 36
+     ...
+     Abst in Exams | Total Marks | % Marks | No. of Fail + Abt
+             0          148.5       61.88          1
+
+   Older sheets may use "No. of Failures", so both formats are supported.
+ */
+ const failureI=findIndex(hs,
+   "No. of Fail + Abt",
+   "No of Fail + Abt",
+   "No. of Fail + ABT",
+   "No of Fail + ABT",
+   "No. of Failures",
+   "No of Failures",
+   "Number of Failures",
+   "Failures",
+   "Failure",
+   "No. of Failure",
+   "No of Failure");
+
+ // Every summary column is excluded from the subject list.
+ // This is what prevents the last subject from being confused with
+ // the failure column when different semesters have different
+ // numbers of subjects.
+ const summaryIndexes=[absenceI,totalI,percentI,failureI]
+   .filter(i=>i>=0 && i>ni);
+
+ const firstSummary=summaryIndexes.length
+   ?Math.min(...summaryIndexes)
+   :hs.length;
+
  const subjects=[];
- for(let i=ni+1;i<end;i++){
-  const h=clean(hs[i]),v=clean(row[i]);
-  if(!h||h.startsWith("__BLANK_")||v==="")continue;
-  if(/roll|student|name|registration|total|marks|percent|failure|absent/i.test(h))continue;
-  subjects.push({subject:h,marks:v,status:seriesStatus(v)});
+
+ for(let i=ni+1;i<firstSummary;i++){
+   const h=clean(hs[i]),v=clean(row[i]);
+   if(!h||h.startsWith("__BLANK_")||v==="")continue;
+
+   const nh=norm(h);
+
+   // Extra protection against accidental summary columns.
+   if(/roll|student|name|registration|admission|total|percent|percentage|failure|failures|fail|absent|abst|marks/i.test(nh))continue;
+
+   subjects.push({
+     subject:h,
+     marks:v,
+     status:seriesStatus(v)
+   });
  }
+
+ // The spreadsheet's "No. of Fail + Abt" column is the authoritative
+ // non-pass/failure count for the Series analysis.
+ const failures=failureI>=0?clean(row[failureI]):"";
+ const absent=absenceI>=0?clean(row[absenceI]):"0";
+
+ const f=Number(failures);
+
+ // Do not count failed marks ourselves. The sheet already provides the
+ // official count. Since "No. of Fail + Abt" includes the ABT component,
+ // subtract that combined count from the number of actual subjects.
+ const pass=String(
+   Math.max(
+     0,
+     subjects.length-(Number.isFinite(f)?f:0)
+   )
+ );
+
  return {
-  kind:"series",
-  subjects,
-  absent:absenceI>=0?clean(row[absenceI]):"0",
-  total:totalI>=0?clean(row[totalI]):"",
-  percentage:percentI>=0?clean(row[percentI]):"",
-  failures:failureI>=0?clean(row[failureI]):""
+   kind:"series",
+   subjects,
+   absent,
+   total:totalI>=0?clean(row[totalI]):"",
+   percentage:percentI>=0?clean(row[percentI]):"",
+   failures,
+   pass,
+   subjectCount:subjects.length
  };
 }
-
 function seriesStatus(v){
  const x=norm(v);
  if(x==="absent"||x==="a"||x.includes("absent"))return "ABSENT";
@@ -736,25 +802,27 @@ function displayMark(v){const n=Number(v);return v!==""&&Number.isFinite(n)?(Num
 function displayPercent(v){const n=Number(v);return v!==""&&Number.isFinite(n)?n.toFixed(2):v}
 
 function renderSeries(r){
- const pass=r.subjects.filter(x=>x.status==="PASS").length,fail=r.subjects.filter(x=>x.status==="FAIL").length;
- const absentSubjects=r.subjects.filter(x=>x.status==="ABSENT").length;
- const absent=r.absent!==""?r.absent:String(absentSubjects);
+ const f=Number(r.failures);
+ const fail=Number.isFinite(f)?Math.max(0,f):r.subjects.filter(x=>x.status==="FAIL").length;
+ const a=Number(r.absent);
+ const absent=Number.isFinite(a)?Math.max(0,a):r.subjects.filter(x=>x.status==="ABSENT").length;
+ const pass=Number.isFinite(Number(r.pass))?Number(r.pass):Math.max(0,r.subjects.length-fail-absent);
+
  $("recordContent").innerHTML=`
  <div class="summary">
   <div class="stat"><small>Total Marks</small><b>${esc(displayMark(r.total)||"—")}</b></div>
   <div class="stat"><small>% Marks</small><b>${esc(displayPercent(r.percentage)||"—")}</b></div>
-  <div class="stat"><small>Failures</small><b class="${Number(r.failures)>0?"fail":"pass"}">${esc(r.failures||String(fail))}</b></div>
+  <div class="stat"><small>Failures</small><b class="${fail>0?"fail":"pass"}">${esc(String(fail))}</b></div>
  </div>
  <div class="summary">
   <div class="stat"><small>Subjects</small><b>${r.subjects.length}</b></div>
-  <div class="stat"><small>Pass</small><b class="pass">${pass}</b></div>
-  <div class="stat"><small>Absent in Exams</small><b class="${Number(absent)>0?"fail":""}">${esc(absent)}</b></div>
+  <div class="stat"><small>Pass</small><b class="pass">${esc(String(pass))}</b></div>
+  <div class="stat"><small>Absent in Exams</small><b class="${absent>0?"fail":""}">${esc(String(absent))}</b></div>
  </div>
  <div class="table-wrap"><table class="table"><thead><tr><th>Subject</th><th>Marks</th><th>Status</th></tr></thead><tbody>
  ${r.subjects.map(x=>`<tr><td>${esc(x.subject)}</td><td>${esc(displayMark(x.marks))}</td><td class="${x.status==="FAIL"||x.status==="ABSENT"?"fail":"pass"}">${esc(x.status)}</td></tr>`).join("")}
  </tbody></table></div>`;
 }
-
 function renderSessional(r){
  const eligible=r.subjects.filter(x=>norm(x.eligibility)==="yes"||norm(x.eligibility)==="eligible").length;
  const notEligible=r.subjects.length-eligible;
